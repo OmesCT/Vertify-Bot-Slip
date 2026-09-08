@@ -1,0 +1,38 @@
+{
+  "name": "bot-vertify-slip",
+  "version": "1.0.0",
+  "description": "Discord Bot for verifying payment slips via EasySlip API and MongoDB",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "deploy-commands": "tsx src/deploy-commands.ts"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "slip-verification",
+    "easyslip",
+    "mongodb"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "axios": "^1.7.9",
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.7",
+    "form-data": "^4.0.1",
+    "jsqr": "^1.4.0",
+    "mongoose": "^8.8.4",
+    "sharp": "^0.35.4",
+    "tesseract.js": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/sharp": "^0.31.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
