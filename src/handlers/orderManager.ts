@@ -1,4 +1,5 @@
 import { Order, IOrder } from "../models/Order.js";
+import { syncOrderToSheet } from "./sheetsLogger.js";
 
 export async function createOrder(data: {
   channelId: string;
@@ -16,7 +17,9 @@ export async function createOrder(data: {
     ...data,
   });
 
-  return await order.save();
+  const savedOrder = await order.save();
+  syncOrderToSheet(savedOrder, "create").catch(() => {});
+  return savedOrder;
 }
 
 export async function getLatestPendingOrderByChannel(channelId: string): Promise<IOrder | null> {
@@ -34,11 +37,13 @@ export async function getAllPendingOrdersByChannel(channelId: string): Promise<I
 }
 
 export async function cancelOrderByOrderId(orderId: string): Promise<IOrder | null> {
-  return await Order.findOneAndUpdate(
+  const updated = await Order.findOneAndUpdate(
     { orderId },
     { status: "cancelled" },
     { new: true }
   );
+  if (updated) syncOrderToSheet(updated, "update").catch(() => {});
+  return updated;
 }
 
 export async function mergePendingOrder(
@@ -51,7 +56,9 @@ export async function mergePendingOrder(
 
   existing.items = `${existing.items}\n+ ${additionalItems}`;
   existing.amount = Number((existing.amount + additionalAmount).toFixed(2));
-  return await existing.save();
+  const saved = await existing.save();
+  syncOrderToSheet(saved, "update").catch(() => {});
+  return saved;
 }
 
 export async function getOrderByOrderId(orderId: string): Promise<IOrder | null> {
@@ -68,7 +75,7 @@ export async function markOrderAsPaid(
   slipRef: string,
   slipPayload: any
 ): Promise<IOrder | null> {
-  return await Order.findOneAndUpdate(
+  const updated = await Order.findOneAndUpdate(
     { orderId },
     {
       status: "paid",
@@ -78,6 +85,8 @@ export async function markOrderAsPaid(
     },
     { new: true }
   );
+  if (updated) syncOrderToSheet(updated, "update").catch(() => {});
+  return updated;
 }
 
 export async function getOrdersByChannel(channelId: string): Promise<IOrder[]> {

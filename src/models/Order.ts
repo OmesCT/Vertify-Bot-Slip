@@ -12,6 +12,7 @@ export interface IOrder extends Document {
   slipPayload?: any;
   createdBy: string;
   createdAt: Date;
+  updatedAt?: Date;
   paidAt?: Date;
 }
 

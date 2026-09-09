@@ -12,6 +12,7 @@ export const config = {
   geminiApiKey: process.env.GEMINI_API_KEY || "",
   // Maximum age of slip in minutes (default: 1440 minutes = 24 hours)
   slipMaxAgeMinutes: parseInt(process.env.SLIP_MAX_AGE_MINUTES || "1440", 10),
+  googleSheetWebhookUrl: process.env.GOOGLE_SHEET_WEBHOOK_URL || "",
 };
 
 export function validateConfig(): void {
