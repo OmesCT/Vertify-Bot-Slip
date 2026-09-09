@@ -266,7 +266,11 @@ export async function toggleShopStatus(
               .then((msg) => msg.edit({ embeds: [createShopDisplayEmbed(isOpen)] }))
               .catch(() => {});
           }
+        } else {
+          await setupShopStatusChannel(guild);
         }
+      } else {
+        await setupShopStatusChannel(guild);
       }
 
       // 2. Update Control Channel Embed in log-zone
@@ -284,6 +288,8 @@ export async function toggleShopStatus(
               })
             )
             .catch(() => {});
+        } else {
+          await setupShopStatusChannel(guild);
         }
       }
     })().catch((bgErr) => console.error("[SHOP] Background update error:", bgErr));

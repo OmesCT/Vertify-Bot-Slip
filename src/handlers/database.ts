@@ -14,11 +14,17 @@ export async function connectDatabase(): Promise<void> {
     throw new Error("MONGODB_URI is not set in environment variables");
   }
 
-  try {
-    await mongoose.connect(config.mongoUri);
-    console.log("[DATABASE] Connected successfully to MongoDB Atlas");
-  } catch (error) {
-    console.error("[DATABASE] Connection error:", error);
-    throw error;
+  let attempts = 5;
+  while (attempts > 0) {
+    try {
+      await mongoose.connect(config.mongoUri);
+      console.log("[DATABASE] Connected successfully to MongoDB Atlas");
+      return;
+    } catch (error) {
+      attempts--;
+      console.error(`[DATABASE] Connection error (retries left: ${attempts}):`, error);
+      if (attempts === 0) throw error;
+      await new Promise((res) => setTimeout(res, 2000));
+    }
   }
 }

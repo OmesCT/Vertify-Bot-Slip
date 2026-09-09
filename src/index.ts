@@ -16,9 +16,25 @@ const client = new Client({
   partials: [Partials.Channel, Partials.Message],
 });
 
+import { setupShopStatusChannel } from "./handlers/shopManager.js";
+import { ShopStatus } from "./models/ShopStatus.js";
+
 client.once("ready", () => handleReady(client));
 client.on("interactionCreate", (interaction) => handleInteractionCreate(interaction));
 client.on("messageCreate", (message) => handleMessageCreate(message));
+client.on("channelDelete", async (channel) => {
+  if ("guild" in channel && channel.guild) {
+    try {
+      const statusDoc = await ShopStatus.findOne({ guildId: channel.guild.id });
+      if (statusDoc && (channel.id === statusDoc.statusChannelId || channel.id === statusDoc.controlChannelId)) {
+        console.log(`[SHOP] Shop channel was deleted (${channel.id}). Automatically re-creating...`);
+        await setupShopStatusChannel(channel.guild);
+      }
+    } catch (err) {
+      console.error("[SHOP] Error in channelDelete listener:", err);
+    }
+  }
+});
 
 async function main() {
   try {
