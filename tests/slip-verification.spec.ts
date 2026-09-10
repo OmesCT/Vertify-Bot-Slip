@@ -17,7 +17,7 @@ test.describe("Discord Slip Verification & Payment Log", () => {
     });
 
     // 3. Verify slip log embed
-    const logEmbed = page.locator('div[class*="embedWrapper"]');
+    const logEmbed = page.locator('article:has-text("บันทึกการชำระเงิน")');
     await expect(logEmbed.first()).toBeVisible({ timeout: 15000 });
     console.log("[TEST] Verified payment log embeds are displayed correctly!");
   });

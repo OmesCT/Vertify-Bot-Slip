@@ -17,26 +17,22 @@ test.describe("Discord Shop Status Control Panel", () => {
     console.log("[TEST] Chat messages loaded.");
 
     // 3. Check for the Shop Control Panel buttons
-    const openButton = page.locator('button:has-text("เปิดร้าน"), button:has-text("Open")').last();
-    const closeButton = page.locator('button:has-text("ปิดร้าน"), button:has-text("Close")').last();
+    const openButton = page.getByRole("button", { name: /เปิดร้าน/i }).last();
+    const closeButton = page.getByRole("button", { name: /ปิดร้าน/i }).last();
 
-    // Verify at least one button exists
-    await expect(openButton.or(closeButton)).toBeVisible({ timeout: 15000 });
+    // Verify both buttons are visible
+    await expect(openButton).toBeVisible({ timeout: 15000 });
+    await expect(closeButton).toBeVisible({ timeout: 15000 });
     console.log("[TEST] Shop control buttons found successfully!");
 
-    // 4. Test clicking a button (e.g. click Open or Close)
-    if (await openButton.isVisible()) {
-      console.log("[TEST] Clicking 'เปิดร้าน (Open)' button...");
-      await openButton.click();
-    } else {
-      console.log("[TEST] Clicking 'ปิดร้าน (Close)' button...");
-      await closeButton.click();
-    }
+    // 4. Test clicking a button (click Open)
+    console.log("[TEST] Clicking 'เปิดร้าน (Open)' button...");
+    await openButton.click();
 
     // 5. Verify interaction response or updated embed appears
-    await page.waitForTimeout(3000);
-    const embedTitle = page.locator('div[class*="embedTitle"]:has-text("GTO SHOP"), div[class*="embedTitle"]:has-text("แผงควบคุม")');
-    await expect(embedTitle.first()).toBeVisible({ timeout: 10000 });
+    await page.waitForTimeout(2000);
+    const embedArticle = page.locator('article:has-text("แผงควบคุม"), article:has-text("สถานะปัจจุบัน")');
+    await expect(embedArticle.last()).toBeVisible({ timeout: 10000 });
     console.log("[TEST] Status embed updated and visible!");
   });
 });
