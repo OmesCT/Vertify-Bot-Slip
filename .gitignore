@@ -4,3 +4,9 @@ dist/
 *.log
 .DS_Store
 *.traineddata
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+.auth/
+playwright-data/
