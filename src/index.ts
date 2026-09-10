@@ -10,6 +10,7 @@ validateConfig();
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
   ],
@@ -18,10 +19,12 @@ const client = new Client({
 
 import { setupShopStatusChannel } from "./handlers/shopManager.js";
 import { ShopStatus } from "./models/ShopStatus.js";
+import { handleGuildMemberAdd } from "./events/guildMemberAdd.js";
 
 client.once("ready", () => handleReady(client));
 client.on("interactionCreate", (interaction) => handleInteractionCreate(interaction));
 client.on("messageCreate", (message) => handleMessageCreate(message));
+client.on("guildMemberAdd", (member) => handleGuildMemberAdd(member));
 client.on("channelDelete", async (channel) => {
   if ("guild" in channel && channel.guild) {
     try {

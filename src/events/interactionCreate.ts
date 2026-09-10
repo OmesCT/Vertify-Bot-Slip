@@ -9,12 +9,20 @@ import {
   handleOrderModalSubmit,
   handleOrderButton,
 } from "../commands/order.js";
+import {
+  handleWelcomeCommand,
+  handleWelcomeModalSubmit,
+  handleWelcomeSelectMenu,
+  handleWelcomeButton,
+} from "../commands/welcome.js";
 import { toggleShopStatus } from "../handlers/shopManager.js";
 
 export async function handleInteractionCreate(interaction: Interaction): Promise<void> {
   if (interaction.isChatInputCommand()) {
     if (interaction.commandName === "order") {
       await handleOrderCommand(interaction);
+    } else if (interaction.commandName === "welcome") {
+      await handleWelcomeCommand(interaction);
     }
   } else if (interaction.isModalSubmit()) {
     if (
@@ -22,9 +30,17 @@ export async function handleInteractionCreate(interaction: Interaction): Promise
       interaction.customId.startsWith("order_create_modal_")
     ) {
       await handleOrderModalSubmit(interaction);
+    } else if (interaction.customId.startsWith("welcome_modal_")) {
+      await handleWelcomeModalSubmit(interaction);
+    }
+  } else if (interaction.isStringSelectMenu()) {
+    if (interaction.customId === "welcome_select_active") {
+      await handleWelcomeSelectMenu(interaction);
     }
   } else if (interaction.isButton()) {
-    if (interaction.customId.startsWith("order_act_")) {
+    if (interaction.customId === "welcome_btn_test") {
+      await handleWelcomeButton(interaction);
+    } else if (interaction.customId.startsWith("order_act_")) {
       await handleOrderButton(interaction);
     } else if (interaction.customId.startsWith("shop_toggle_")) {
       // Check admin permissions for shop toggle

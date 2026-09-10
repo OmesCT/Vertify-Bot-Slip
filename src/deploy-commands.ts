@@ -1,10 +1,11 @@
 import { REST, Routes } from "discord.js";
 import { config, validateConfig } from "./config/index.js";
 import { data as orderCommandData } from "./commands/order.js";
+import { getWelcomeCommandData } from "./commands/welcome.js";
 
 validateConfig();
 
-const commands = [orderCommandData.toJSON()];
+const commands = [orderCommandData.toJSON(), getWelcomeCommandData().toJSON()];
 
 const rest = new REST({ version: "10" }).setToken(config.discordToken);
 
